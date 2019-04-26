@@ -1,0 +1,24 @@
+{
+  "name": "node-sass-runner",
+  "description": "Config wrapper for node-sass",
+  "version": "0.0.1",
+  "author": {
+    "name": "Shukri Adams",
+    "email": "shukri.adams@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/shukriadams/node-sass-runner.git"
+  },
+  "licenses": [
+    {
+      "url": "https://github.com/shukriadams/node-sass-runner.git"
+    }
+  ],
+  "dependencies": {
+    "node-sass": "4.11.0",
+    "mkdirp": "0.5.1",
+    "glob": "5.0.15"
+  },
+  "keywords": []
+}
