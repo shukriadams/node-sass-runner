@@ -10,15 +10,17 @@ module.exports = function(options, callback) {
 
     
     if (!options.scssPath)
-        grunt.log.error(' could not find expected value "scssPath".');
+        return console.error(' could not find expected value "scssPath".');
 
     if (!options.cssOutFolder)
-        grunt.log.error(' could not find expected value for "cssOutFolder".');
+        return console.error(' could not find expected value for "cssOutFolder".');
 
     if (!fs.existsSync(options.cssOutFolder))
         mkdirp.sync(options.cssOutFolder);
 
     glob(options.scssPath, options.globOptions, function (er, files) {
+        if (!files.length)
+            console.log(options.scssPath + ' dit not find any sass files.');
 
         if (er)
             return callback(er);
@@ -33,6 +35,7 @@ module.exports = function(options, callback) {
         }
 
         files.forEach(function(file, i ){
+            
             var outfile = path.join(
                 options.cssOutFolder,
                 path.basename(file).substr(0, path.basename(file).length - 5) + '.css'); // remove .scss extension
