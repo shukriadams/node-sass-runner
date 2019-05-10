@@ -7,7 +7,10 @@ module.exports = async function(options) {
             glob = require('glob');
         
         options.globOptions = options.globOptions || {};
-        
+        callback = callback || function(){
+            console.log('No callback set for node-sass-runner. Sass is done building.');
+        };
+
         if (!options.scssPath)
             return console.error(' could not find expected value "scssPath".');
 
