@@ -51,7 +51,7 @@ module.exports = async function(options) {
                 }, function(err, result){
 
                     if (err){
-                        console.error(`error compiling : {file},  {err}`);
+                        console.error(`error compiling : ${file},  ${err}`);
                     } else {
                         fs.writeFileSync(outfile, result.css);
                         console.log(`compiled ${outfile}`);
