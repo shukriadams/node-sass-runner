@@ -1,7 +1,7 @@
 {
   "name": "node-sass-runner",
   "description": "Config wrapper for node-sass",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "author": {
     "name": "Shukri Adams",
     "email": "shukri.adams@gmail.com"
