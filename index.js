@@ -35,6 +35,7 @@ module.exports = async function(options) {
                 
                 var outfile = path.join(
                     options.cssOutFolder,
+                    path.dirname(file),
                     path.basename(file).substr(0, path.basename(file).length - 5) + '.css'); // remove .scss extension
 
                 // ignore partials
@@ -42,7 +43,9 @@ module.exports = async function(options) {
                     if (checkIfDone())
                         return resolve();
                 }
-
+                
+                fs.ensureDirSync(path.dirname(outfile));
+                
                 console.log('Processing ' + file) ;
 
                 sass.render({
