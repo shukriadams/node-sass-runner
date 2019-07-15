@@ -1,7 +1,7 @@
 module.exports = async function(options) {
     return new Promise(function(resolve, reject){
         let sass = require('node-sass'),
-            fs = require('fs'),
+            fs = require('fs-extra'),
             path = require('path'),
             mkdirp =  require('mkdirp'),
             glob = require('glob');
