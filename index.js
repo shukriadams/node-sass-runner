@@ -11,8 +11,8 @@ module.exports = {
     /**
      * options:
      * {object} globOptions 
-     * {string} scssPath
-     * {string} cssOutFolder
+     * {string} scss path to find scss files
+     * {string} css path to write css files
      */
     async renderAll (options) {
         return new Promise((resolve, reject)=>{
@@ -20,18 +20,18 @@ module.exports = {
                 
                 options.globOptions = options.globOptions || {}
 
-                if (!options.scssPath)
-                    return console.error(' could not find expected value "scssPath".')
+                if (!options.scss)
+                    return console.error(' could not find expected value "scss".')
     
-                if (!options.cssOutFolder)
-                    return console.error(' could not find expected value for "cssOutFolder".')
+                if (!options.css)
+                    return console.error(' could not find expected value for "css".')
     
-                if (!fs.existsSync(options.cssOutFolder))
-                    mkdirp.sync(options.cssOutFolder)
+                if (!fs.existsSync(options.css))
+                    mkdirp.sync(options.css)
     
-                glob(options.scssPath, options.globOptions,  (err, files) => {
+                glob(options.scss, options.globOptions,  (err, files) => {
                     if (!files.length)
-                        console.log(`${options.scssPath} did not find any sass files.`)
+                        console.log(`${options.scss} did not find any sass files.`)
     
                     if (err)
                         return reject(err)
@@ -41,7 +41,7 @@ module.exports = {
                     files.forEach(async file =>{
                         try {
                             let outfile = path.join(
-                                options.cssOutFolder,
+                                options.css,
                                 path.dirname(file),
                                 `${path.basename(file).substr(0, path.basename(file).length - 5)}.css`) // remove .scss extension
         
@@ -67,16 +67,18 @@ module.exports = {
 
     /**
      * Converts a sass file to css. Css is auto-prefixed for cross-browser support
+     * scss : path of scss file
+     * css : path to write css file
      */
-    async renderSingle(sassPath, cssPath){
+    async renderSingle(scss, css){
         return new Promise((resolve, reject)=>{
             try {
                 sass.render({
-                    file: sassPath,
+                    file: scss,
                     sourceComments: true
                 }, async (err, result)=>{
                     if (err)
-                        return reject(`error compiling sass file ${sassPath}`, err)
+                        return reject(`error compiling sass file ${scss}`, err)
     
                     postcss([ autoprefixer ]).process(result.css).then(async result => {
     
@@ -84,8 +86,8 @@ module.exports = {
                             console.warn(warn.toString())
                         })
                        
-                        await fs.writeFile(cssPath, result.css)
-                        console.log(`compiled ${cssPath}`)
+                        await fs.writeFile(css, result.css)
+                        console.log(`compiled ${css}`)
                         resolve()
                     })
                 })
