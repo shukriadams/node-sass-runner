@@ -11,6 +11,7 @@ module.exports = {
     /**
      * options:
      * {object} globOptions 
+     * {object} sassOptions (optional) 
      * {string} scss path to find scss files
      * {string} css path to write css files
      */
@@ -50,7 +51,7 @@ module.exports = {
                                 return
                             
                             fs.ensureDirSync(path.dirname(outfile))
-                            await this.renderSingle(file, outfile)
+                            await this.renderSingle(file, outfile, options.sassOptions)
                         }
                         finally{
                             processedCount ++
@@ -66,17 +67,22 @@ module.exports = {
     },
 
     /**
-     * Converts a sass file to css. Css is auto-prefixed for cross-browser support
+     * Converts a sass file to css. Css is auto-prefixed for cross-browser support.
      * scss : path of scss file
      * css : path to write css file
      */
-    async renderSingle(scss, css){
+    async renderSingle(scss, css, options = {}){
+        options.file = scss
+
+        if (options.sourceComments === undefined)
+            sourceComments.sourceComments = true
+
+        if (options.indentWidth === undefined)
+            options.indentWidth = 4
+
         return new Promise((resolve, reject)=>{
             try {
-                sass.render({
-                    file: scss,
-                    sourceComments: true
-                }, async (err, result)=>{
+                sass.render(options, async (err, result)=>{
                     if (err)
                         return reject(`error compiling sass file ${scss}`, err)
     
