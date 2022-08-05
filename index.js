@@ -1,4 +1,4 @@
-const sass = require('node-sass'),
+const sass = require('sass'),
       autoprefixer = require('autoprefixer'),
       postcss = require('postcss'),
       fs = require('fs-extra'),
@@ -75,7 +75,7 @@ module.exports = {
         options.file = scss
 
         if (options.sourceComments === undefined)
-            sourceComments.sourceComments = true
+            options.sourceComments = true
 
         if (options.indentWidth === undefined)
             options.indentWidth = 4
