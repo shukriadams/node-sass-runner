@@ -4,7 +4,7 @@ const sass = require('sass'),
       fs = require('fs-extra'),
       path = require('path'),
       mkdirp =  require('mkdirp'),
-      glob = require('glob')
+      globby = require('globby')
 
 module.exports = {
 
@@ -29,37 +29,33 @@ module.exports = {
     
                 if (!fs.existsSync(options.css))
                     mkdirp.sync(options.css)
-    
-                glob(options.scss, options.globOptions,  (err, files) => {
-                    if (!files.length)
-                        console.log(`${options.scss} did not find any sass files.`)
-    
-                    if (err)
-                        return reject(err)
-    
-                    let processedCount = 0
-    
-                    files.forEach(async file =>{
-                        try {
-                            let outfile = path.join(
-                                options.css,
-                                path.dirname(file),
-                                `${path.basename(file).substr(0, path.basename(file).length - 5)}.css`) // remove .scss extension
-        
-                            // ignore partials
-                            if (path.basename(file).substr(0, 1) === '_')
-                                return
-                            
-                            fs.ensureDirSync(path.dirname(outfile))
-                            await this.renderSingle(file, outfile, options.sassOptions)
-                        }
-                        finally{
-                            processedCount ++
-                            if (processedCount >= files.length)
-                                resolve()
-                        }
-                    })
+
+                let files = globby.sync(options.scss, options.globOptions)
+                if (!files.length)
+                    console.log(`${options.scss} did not find any sass files.`)
+
+                let processedCount = 0
+                files.forEach(async file => {
+                    try {
+                        let outfile = path.join(
+                            options.css,
+                            path.dirname(file),
+                            `${path.basename(file).substr(0, path.basename(file).length - 5)}.css`) // remove .scss extension
+
+                        // ignore partials
+                        if (path.basename(file).substr(0, 1) === '_')
+                            return
+
+                        fs.ensureDirSync(path.dirname(outfile))
+                        await this.renderSingle(file, outfile, options.sassOptions)
+                    }
+                    finally {
+                        processedCount++
+                        if (processedCount >= files.length)
+                            resolve()
+                    }
                 })
+
             } catch(ex){
                 reject(ex)
             }
